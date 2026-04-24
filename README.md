@@ -4,6 +4,16 @@ Endless Toil scans recently read code and plays escalating recorded human groans
 
 Note: installing the plugin does not make it auto-activate in every thread by default. Start a new thread and ask Codex or Claude to use `Endless Toil`.
 
+## Use In Codex Desktop
+
+Clone this repository somewhere on your machine, then open that directory in Codex Desktop.
+
+1. Open `Plugins`.
+2. Search or browse for `Endless Toil`, then open its details.
+3. Select the plus button or `Add to Codex`.
+4. If prompted, complete any setup steps.
+5. Start a new thread and ask Codex to use `Endless Toil`.
+
 ## Use In Codex CLI
 
 From Codex CLI, add this repository as a local marketplace root:
@@ -19,16 +29,6 @@ Then open the plugin browser:
 ```
 
 Choose the `Endless Toil` marketplace, install `Endless Toil`, restart Codex if needed, and invoke the plugin or its bundled skill from a new thread.
-
-## Use In Codex Desktop
-
-Clone this repository somewhere on your machine, then open that directory in Codex Desktop.
-
-1. Open `Plugins`.
-2. Search or browse for `Endless Toil`, then open its details.
-3. Select the plus button or `Add to Codex`.
-4. If prompted, complete any setup steps.
-5. Start a new thread and ask Codex to use `Endless Toil`.
 
 ## Use In Claude CLI
 
