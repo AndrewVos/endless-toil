@@ -15,7 +15,7 @@ plugins/endless-toil/skills/endless-toil/scripts/test_sounds.py
 plugins/endless-toil/skills/endless-toil/assets/sounds/zombie_moan_public_domain.ogg
 ```
 
-## Use In Codex
+## Use In Codex CLI
 
 From Codex CLI, add this repository as a local marketplace root:
 
@@ -31,9 +31,21 @@ Then open the plugin browser:
 
 Choose the `Endless Toil` marketplace, install `Endless Toil`, restart Codex if needed, and invoke the plugin or its bundled skill from a new thread.
 
-## Use In Claude Code
+## Use In Codex Desktop
 
-From Claude Code, add this repository as a local marketplace root:
+Clone this repository somewhere on your machine, then open that folder in Codex Desktop.
+
+1. Open `Plugins`.
+2. Search or browse for `Endless Toil`, then open its details.
+3. Select the plus button or `Add to Codex`.
+4. If prompted, complete any setup steps.
+5. Start a new thread and ask Codex to use `Endless Toil`.
+
+## Use In Claude CLI
+
+Clone this repository somewhere on your machine, then start Claude from this repository root.
+
+Add this repository as a local plugin marketplace:
 
 ```text
 /plugin marketplace add .
