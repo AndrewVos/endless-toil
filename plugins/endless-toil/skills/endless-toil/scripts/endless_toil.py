@@ -11,6 +11,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import time
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -275,27 +276,23 @@ def play(level: str, player: list[str], sound_dir: Path) -> None:
 def queue_play(level: str, player: list[str], sound_dir: Path) -> bool:
     try:
         sound = make_sound(level, sound_dir)
+        command = [*player, str(sound)]
+        kwargs = {}
+        if shutil.which("nohup"):
+            command = ["nohup", *command]
+        else:
+            kwargs["start_new_session"] = True
         subprocess.Popen(
-            [*player, str(sound)],
+            command,
             stdin=subprocess.DEVNULL,
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
             close_fds=True,
-            start_new_session=True,
+            **kwargs,
         )
     except (OSError, RuntimeError):
         return False
     return True
-
-
-def play_levels(levels: list[str], sound_dir: Path) -> int:
-    player = audio_player()
-    if player is None:
-        return 1
-    sound_dir.mkdir(parents=True, exist_ok=True)
-    for level in levels:
-        play(level, player, sound_dir)
-    return 0
 
 
 def queue_background_playback(levels: list[str], sound_dir: Path) -> int:
@@ -312,6 +309,16 @@ def queue_background_playback(levels: list[str], sound_dir: Path) -> int:
     return queued
 
 
+def play_levels(levels: list[str], sound_dir: Path) -> int:
+    player = audio_player()
+    if player is None:
+        return 1
+    sound_dir.mkdir(parents=True, exist_ok=True)
+    for level in levels:
+        play(level, player, sound_dir)
+    return 0
+
+
 def queue_background_worker(levels: list[str], sound_dir: Path) -> bool:
     if not levels:
         return False
@@ -323,6 +330,7 @@ def queue_background_worker(levels: list[str], sound_dir: Path) -> bool:
         subprocess.Popen(command, stdin=subprocess.DEVNULL, stdout=log, stderr=log, close_fds=True)
     except OSError:
         return False
+    time.sleep(0.15)
     return True
 
 
