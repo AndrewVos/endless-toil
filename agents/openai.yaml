@@ -1,0 +1,4 @@
+interface:
+  display_name: "Endless Toil"
+  short_description: "Audible code-quality reactions"
+  default_prompt: "Use $endless-toil to scan this repository and play reaction sounds for the code quality you encounter."
