@@ -1,0 +1,25 @@
+{
+  "name": "endless-toil",
+  "version": "0.1.0",
+  "description": "A Codex plugin that plays escalating human groans while code is read.",
+  "author": {
+    "name": "vos"
+  },
+  "license": "MIT",
+  "keywords": ["codex", "skill", "code-review", "audio", "groan"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Endless Toil",
+    "shortDescription": "Audible code-quality groans",
+    "longDescription": "Endless Toil adds a Codex skill that scans recently read code and plays escalating recorded human groans based on code-quality distress signals.",
+    "developerName": "vos",
+    "category": "Productivity",
+    "capabilities": ["Interactive"],
+    "defaultPrompt": [
+      "Use $endless-toil while reading this code.",
+      "Play Endless Toil sounds for this repo.",
+      "Audition the Endless Toil groans."
+    ],
+    "brandColor": "#7C2D12"
+  }
+}

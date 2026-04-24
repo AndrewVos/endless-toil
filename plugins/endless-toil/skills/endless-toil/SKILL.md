@@ -13,33 +13,35 @@ This skill cannot automatically hook every internal Codex file-read event outsid
 
 ## Quick Start
 
+Resolve bundled files relative to the directory containing this `SKILL.md`; do not assume the current working directory is the skill directory. In examples below, `SKILL_DIR` means that directory.
+
 Run:
 
 ```bash
-python3 scripts/endless_toil.py .
+python3 "$SKILL_DIR/scripts/endless_toil.py" .
 ```
 
 Useful options:
 
 ```bash
-python3 scripts/endless_toil.py src tests --max-sounds 8
-python3 scripts/endless_toil.py . --dry-run
-python3 scripts/endless_toil.py bad_file.ts --threshold 3
+python3 "$SKILL_DIR/scripts/endless_toil.py" src tests --max-sounds 8
+python3 "$SKILL_DIR/scripts/endless_toil.py" . --dry-run
+python3 "$SKILL_DIR/scripts/endless_toil.py" bad_file.ts --threshold 3
 ```
 
 Audition the sounds directly without scanning code:
 
 ```bash
-python3 scripts/test_sounds.py
-python3 scripts/test_sounds.py groan wail abyss
-python3 scripts/test_sounds.py --list
+python3 "$SKILL_DIR/scripts/test_sounds.py"
+python3 "$SKILL_DIR/scripts/test_sounds.py" groan wail abyss
+python3 "$SKILL_DIR/scripts/test_sounds.py" --list
 ```
 
 ## Workflow
 
 1. Identify the code paths relevant to the user's request.
 2. Read code normally using the appropriate local tools.
-3. After each code read, run `scripts/endless_toil.py` on the path just read, preferably with `--max-sounds 1` for single files.
+3. After each code read, run `scripts/endless_toil.py` from this skill directory on the path just read, preferably with `--max-sounds 1` for single files.
 4. Use `--dry-run` when sound would be disruptive, when running in CI, or when the user asks for a report only.
 5. Read files with the highest reported scores first when doing review or triage.
 6. Keep the reactions playful; do not treat heuristic scores as proof of defects.
@@ -49,13 +51,13 @@ python3 scripts/test_sounds.py --list
 Whenever this skill is active and Codex reads code with commands like `sed`, `rg`, `cat`, `nl`, `git show`, or an editor/viewer tool, immediately play a reaction for the file or closest path that was read:
 
 ```bash
-python3 scripts/endless_toil.py path/to/file --max-sounds 1
+python3 "$SKILL_DIR/scripts/endless_toil.py" path/to/file --max-sounds 1
 ```
 
 If the read covered multiple files, scan the smallest shared directory or the exact file list:
 
 ```bash
-python3 scripts/endless_toil.py file_a.ts file_b.ts --max-sounds 3
+python3 "$SKILL_DIR/scripts/endless_toil.py" file_a.ts file_b.ts --max-sounds 3
 ```
 
 ## Reaction Levels
@@ -78,3 +80,13 @@ Prefer real recorded samples over synthesis. The bundled `assets/sounds/zombie_m
 The script uses simple static heuristics. For audio, it first tries the bundled recorded human moan sample and falls back to standard-library vocal synthesis only if the sample or `ffmpeg` is unavailable. It writes temporary `.wav` files to the system temp directory and plays them with the first available local player among `afplay`, `paplay`, `aplay`, or `ffplay`.
 
 If no player is available, the script still prints the report and exits successfully unless scanning itself fails.
+
+## Installation Layout
+
+Install this whole directory as `endless-toil`:
+
+- Codex personal skill: `~/.codex/skills/endless-toil/SKILL.md`
+- Claude personal skill: `~/.claude/skills/endless-toil/SKILL.md`
+- Claude project skill: `.claude/skills/endless-toil/SKILL.md`
+
+Keep `SKILL.md`, `scripts/`, `assets/`, and `agents/` together. The scripts derive asset paths from their own location, so the skill can be moved as a folder.
