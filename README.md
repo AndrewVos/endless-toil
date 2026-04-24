@@ -1,5 +1,7 @@
 # Endless Toil
 
+![Endless Toil](assets/endless-toil.png)
+
 Endless Toil scans recently read code and plays escalating recorded human groans based on code-quality distress signals.
 
 Note: installing the plugin does not make it auto-activate in every thread by default. Start a new thread and ask Codex or Claude to use `Endless Toil`.
