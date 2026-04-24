@@ -72,13 +72,20 @@ python3 "$SKILL_DIR/scripts/endless_toil.py" file_a.ts file_b.ts --max-sounds 3
 - `shriek`: severe distress; multiple high-risk patterns are present.
 - `abyss`: the deepest reaction, reserved for truly cursed score totals.
 
+## Requirements
+
+- Python 3.10+
+- A local audio player: `afplay`, `paplay`, `aplay`, or `ffplay`
+
+If an audio player is unavailable, print the scan report and skip playback.
+
 ## Real Sample Playback
 
-Prefer real recorded samples over synthesis. The bundled `assets/sounds/zombie_moan_public_domain.ogg` sample is a public-domain recorded human-character moan from Wikimedia Commons, authored by Gregory Weir and sourced from PDSounds. The script uses `ffmpeg` to render seven pitch/time/effect variants from that recording.
+Use real recorded samples only. The bundled `assets/sounds/zombie_moan_public_domain.ogg` sample is a public-domain recorded human-character moan from Wikimedia Commons, authored by Gregory Weir and sourced from PDSounds. The plugin ships seven pre-rendered `.wav` variants in `assets/sounds/generated/`.
 
 ## Script Notes
 
-The script uses simple static heuristics. For audio, it first tries the bundled recorded human moan sample and falls back to standard-library vocal synthesis only if the sample or `ffmpeg` is unavailable. It writes temporary `.wav` files to the system temp directory and plays them with the first available local player among `afplay`, `paplay`, `aplay`, or `ffplay`.
+The script uses simple static heuristics. For audio, it plays pre-rendered `.wav` files with the first available local player among `afplay`, `paplay`, `aplay`, or `ffplay`.
 
 By default, scan commands queue audio playback in a detached background process so the agent thread can continue immediately. Use `--foreground` only when explicitly testing playback and waiting for the sound to finish is acceptable.
 

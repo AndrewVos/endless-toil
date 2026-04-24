@@ -61,6 +61,13 @@ python3 plugins/endless-toil/skills/endless-toil/scripts/test_sounds.py --list
 python3 plugins/endless-toil/skills/endless-toil/scripts/test_sounds.py groan wail abyss
 ```
 
+## Requirements
+
+- Python 3.10+
+- A local audio player: `afplay` on macOS, or `paplay`, `aplay`, or `ffplay` on Linux
+
+If an audio player is unavailable, Endless Toil still prints scan results, but it will not play sounds.
+
 ## Source
 
 Plugin structure and marketplace layout follow the OpenAI Codex and Claude Code plugin docs:
