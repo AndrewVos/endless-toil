@@ -1,5 +1,7 @@
 # Endless Toil
 
+Hear your agent suffer through your code.
+
 ![Endless Toil](assets/endless-toil.png)
 
 Endless Toil scans recently read code and plays escalating recorded human groans based on code-quality distress signals.
