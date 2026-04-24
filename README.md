@@ -23,7 +23,7 @@ Clone this repository somewhere on your machine, then open that directory in Cod
 From Codex CLI, add this repository as a local marketplace root:
 
 ```bash
-codex plugin marketplace add .
+codex plugin marketplace add ./
 ```
 
 Then open the plugin browser:
@@ -41,7 +41,7 @@ Clone this repository somewhere on your machine, then start Claude from this rep
 Add this repository as a local plugin marketplace:
 
 ```text
-/plugin marketplace add .
+/plugin marketplace add ./
 ```
 
 Then install the plugin:
