@@ -8,6 +8,10 @@ Endless Toil runs alongside your coding agent in real time, playing escalating r
 
 Note: installing the plugin does not make it auto-activate in every thread by default. Start a new thread and ask Codex or Claude to use `Endless Toil`.
 
+## Demo
+
+[![Endless Toil video demo](https://img.youtube.com/vi/m7mYzSZdNPE/hqdefault.jpg)](https://youtu.be/m7mYzSZdNPE)
+
 ## Use In Codex Desktop
 
 Clone this repository somewhere on your machine, then open that directory in Codex Desktop.
