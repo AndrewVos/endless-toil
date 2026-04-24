@@ -1,12 +1,14 @@
 # Endless Toil
 
-Endless Toil is a Codex plugin that adds an `endless-toil` skill. When active, the skill scans recently read code and plays escalating recorded human groans based on code-quality distress signals.
+Endless Toil is a Codex and Claude Code plugin that adds an `endless-toil` skill. When active, the skill scans recently read code and plays escalating recorded human groans based on code-quality distress signals.
 
-This repository is laid out as a local Codex plugin marketplace, following the OpenAI Codex plugin docs:
+This repository is laid out as a local plugin marketplace for both Codex and Claude Code:
 
 ```text
 .agents/plugins/marketplace.json
+.claude-plugin/marketplace.json
 plugins/endless-toil/.codex-plugin/plugin.json
+plugins/endless-toil/.claude-plugin/plugin.json
 plugins/endless-toil/skills/endless-toil/SKILL.md
 plugins/endless-toil/skills/endless-toil/scripts/endless_toil.py
 plugins/endless-toil/skills/endless-toil/scripts/test_sounds.py
@@ -29,6 +31,26 @@ Then open the plugin browser:
 
 Choose the `Endless Toil` marketplace, install `Endless Toil`, restart Codex if needed, and invoke the plugin or its bundled skill from a new thread.
 
+## Use In Claude Code
+
+From Claude Code, add this repository as a local marketplace root:
+
+```text
+/plugin marketplace add .
+```
+
+Then install the plugin:
+
+```text
+/plugin install endless-toil@endless-toil
+```
+
+Restart Claude Code if prompted, then invoke the bundled skill:
+
+```text
+/endless-toil
+```
+
 ## Test Sounds
 
 From this repository root:
@@ -40,6 +62,7 @@ python3 plugins/endless-toil/skills/endless-toil/scripts/test_sounds.py groan wa
 
 ## Source
 
-Plugin structure and marketplace layout follow the OpenAI Codex plugin docs:
+Plugin structure and marketplace layout follow the OpenAI Codex and Claude Code plugin docs:
 
 https://developers.openai.com/codex/plugins
+https://code.claude.com/docs/en/plugins
