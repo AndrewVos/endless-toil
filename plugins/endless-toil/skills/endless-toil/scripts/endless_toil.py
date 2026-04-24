@@ -423,6 +423,60 @@ def play(level: str, player: list[str], sound_dir: Path) -> None:
         print(f"warning: could not play {sound}: {exc}", file=sys.stderr)
 
 
+def queue_play(level: str, player: list[str], sound_dir: Path) -> bool:
+    sound = make_sound(level, sound_dir)
+    try:
+        subprocess.Popen(
+            [*player, str(sound)],
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            close_fds=True,
+            start_new_session=True,
+        )
+    except OSError:
+        return False
+    return True
+
+
+def play_levels(levels: list[str], sound_dir: Path) -> int:
+    player = audio_player()
+    if player is None:
+        return 1
+    sound_dir.mkdir(parents=True, exist_ok=True)
+    for level in levels:
+        play(level, player, sound_dir)
+    return 0
+
+
+def queue_background_playback(levels: list[str], sound_dir: Path) -> int:
+    if not levels:
+        return 0
+    player = audio_player()
+    if player is None:
+        return 0
+    sound_dir.mkdir(parents=True, exist_ok=True)
+    queued = 0
+    for level in levels:
+        if queue_play(level, player, sound_dir):
+            queued += 1
+    return queued
+
+
+def queue_background_worker(levels: list[str], sound_dir: Path) -> bool:
+    if not levels:
+        return False
+    python = sys.executable or shutil.which("python3") or "python3"
+    log_path = Path(tempfile.gettempdir()) / "endless-toil-background.log"
+    command = [python, str(Path(__file__).resolve()), "--play-levels", *levels, "--sound-dir", str(sound_dir)]
+    try:
+        log = log_path.open("ab")
+        subprocess.Popen(command, stdin=subprocess.DEVNULL, stdout=log, stderr=log, close_fds=True)
+    except OSError:
+        return False
+    return True
+
+
 def matches_any(path: Path, patterns: list[str]) -> bool:
     text = str(path)
     return any(fnmatch.fnmatch(text, pattern) or fnmatch.fnmatch(path.name, pattern) for pattern in patterns)
@@ -439,12 +493,21 @@ def main(argv: list[str]) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("paths", nargs="*", default=["."], help="Files or directories to scan.")
     parser.add_argument("--dry-run", action="store_true", help="Print reactions without playing audio.")
+    parser.add_argument("--foreground", action="store_true", help="Play audio before exiting instead of queuing it in the background.")
     parser.add_argument("--include-hidden", action="store_true", help="Include hidden files and directories.")
     parser.add_argument("--max-files", type=int, default=40, help="Maximum scored files to print.")
     parser.add_argument("--max-sounds", type=int, default=12, help="Maximum reaction sounds to play.")
     parser.add_argument("--threshold", type=int, default=4, help="Minimum score required for an audible reaction.")
     parser.add_argument("--exclude", action="append", default=[], help="Glob pattern to exclude. Can be repeated.")
+    parser.add_argument("--play-levels", nargs="+", help=argparse.SUPPRESS)
+    parser.add_argument("--sound-dir", help=argparse.SUPPRESS)
     args = parser.parse_args(argv)
+
+    sound_dir = Path(args.sound_dir).expanduser() if args.sound_dir else Path(tempfile.gettempdir()) / "endless-toil-sounds"
+    if args.play_levels:
+        valid_levels = {profile.name for profile in REACTION_LEVELS}
+        levels = [level for level in args.play_levels if level in valid_levels]
+        return play_levels(levels, sound_dir)
 
     paths = [Path(path) for path in args.paths]
     files = [path for path in iter_files(paths, args.include_hidden) if not matches_any(path, args.exclude)]
@@ -463,15 +526,22 @@ def main(argv: list[str]) -> int:
         print("Dry run: audio skipped.")
         return 0
 
-    player = audio_player()
-    if player is None:
+    if audio_player() is None:
         print("No local audio player found; report printed without sound.")
         return 0
 
-    sound_dir = Path(tempfile.gettempdir()) / "endless-toil-sounds"
-    sound_dir.mkdir(parents=True, exist_ok=True)
-    for score in scores[: args.max_sounds]:
-        play(score.level, player, sound_dir)
+    levels = [score.level for score in scores[: args.max_sounds]]
+    if args.foreground:
+        play_levels(levels, sound_dir)
+    else:
+        queued = queue_background_playback(levels, sound_dir)
+        if queued:
+            print("Audio queued in background.")
+        elif queue_background_worker(levels, sound_dir):
+            print("Audio queued in background worker.")
+        else:
+            print("Could not queue background audio; playing in foreground.")
+            play_levels(levels, sound_dir)
     return 0
 
 

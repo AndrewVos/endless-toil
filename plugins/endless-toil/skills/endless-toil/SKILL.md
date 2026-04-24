@@ -27,6 +27,7 @@ Useful options:
 python3 "$SKILL_DIR/scripts/endless_toil.py" src tests --max-sounds 8
 python3 "$SKILL_DIR/scripts/endless_toil.py" . --dry-run
 python3 "$SKILL_DIR/scripts/endless_toil.py" bad_file.ts --threshold 3
+python3 "$SKILL_DIR/scripts/endless_toil.py" bad_file.ts --foreground
 ```
 
 Audition the sounds directly without scanning code:
@@ -78,6 +79,8 @@ Prefer real recorded samples over synthesis. The bundled `assets/sounds/zombie_m
 ## Script Notes
 
 The script uses simple static heuristics. For audio, it first tries the bundled recorded human moan sample and falls back to standard-library vocal synthesis only if the sample or `ffmpeg` is unavailable. It writes temporary `.wav` files to the system temp directory and plays them with the first available local player among `afplay`, `paplay`, `aplay`, or `ffplay`.
+
+By default, scan commands queue audio playback in a detached background process so the agent thread can continue immediately. Use `--foreground` only when explicitly testing playback and waiting for the sound to finish is acceptable.
 
 If no player is available, the script still prints the report and exits successfully unless scanning itself fails.
 
