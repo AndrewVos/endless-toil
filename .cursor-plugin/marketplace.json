@@ -1,0 +1,16 @@
+{
+  "name": "endless-toil",
+  "owner": {
+    "name": "vos"
+  },
+  "metadata": {
+    "description": "Endless Toil Cursor plugin marketplace"
+  },
+  "plugins": [
+    {
+      "name": "endless-toil",
+      "source": "plugins/endless-toil",
+      "description": "Play escalating human groans while code is read."
+    }
+  ]
+}

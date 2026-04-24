@@ -1,0 +1,14 @@
+{
+  "name": "endless-toil",
+  "displayName": "Endless Toil",
+  "version": "0.1.0",
+  "description": "Play escalating human groans while code is read.",
+  "author": {
+    "name": "vos"
+  },
+  "license": "MIT",
+  "keywords": ["cursor-plugin", "skills", "code-review", "audio", "groan"],
+  "category": "developer-tools",
+  "tags": ["code-review", "audio", "quality"],
+  "skills": "./skills/"
+}

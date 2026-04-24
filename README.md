@@ -56,6 +56,16 @@ Restart Claude Code if prompted, then invoke the bundled skill:
 /endless-toil
 ```
 
+## Use In Cursor
+
+Clone this repository somewhere on your machine, then add it as a local Cursor plugin marketplace from Cursor.
+
+Install `Endless Toil`, restart Cursor if prompted, then ask Cursor Agent to use the bundled skill:
+
+```text
+Use endless-toil while reading this code.
+```
+
 ## Test Sounds
 
 From this repository root:
@@ -78,3 +88,4 @@ Plugin structure and marketplace layout follow the OpenAI Codex and Claude Code 
 
 https://developers.openai.com/codex/plugins
 https://code.claude.com/docs/en/plugins
+https://github.com/cursor/plugins
