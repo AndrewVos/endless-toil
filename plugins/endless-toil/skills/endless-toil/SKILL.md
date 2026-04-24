@@ -27,6 +27,7 @@ Useful options:
 python3 "$SKILL_DIR/scripts/endless_toil.py" src tests --max-sounds 8
 python3 "$SKILL_DIR/scripts/endless_toil.py" . --dry-run
 python3 "$SKILL_DIR/scripts/endless_toil.py" bad_file.ts --threshold 3
+python3 "$SKILL_DIR/scripts/endless_toil.py" bad_file.ts --verbose
 python3 "$SKILL_DIR/scripts/endless_toil.py" bad_file.ts --foreground
 ```
 
@@ -88,6 +89,8 @@ Use real recorded samples only. The bundled `assets/sounds/zombie_moan_public_do
 The script uses simple static heuristics. For audio, it plays pre-rendered `.wav` files with the first available local player among `afplay`, `paplay`, `aplay`, or `ffplay`.
 
 By default, scan commands queue audio playback in a detached background process so the agent thread can continue immediately. Use `--foreground` only when explicitly testing playback and waiting for the sound to finish is acceptable.
+
+Normal scan commands are quiet by default so agent threads do not fill with reports. Use `--verbose` when you need scan details or playback status, and use `--dry-run` when you want a report without sound.
 
 If no player is available, the script still prints the report and exits successfully unless scanning itself fails.
 

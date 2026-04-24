@@ -139,7 +139,6 @@ def iter_files(paths: list[Path], include_hidden: bool) -> list[Path]:
                 files.append(path)
             continue
         if not path.exists():
-            print(f"warning: path does not exist: {path}", file=sys.stderr)
             continue
         for root, dirnames, filenames in os.walk(path):
             dirnames[:] = [
@@ -171,7 +170,6 @@ def read_text(path: Path) -> str | None:
     try:
         data = path.read_bytes()
     except OSError as exc:
-        print(f"warning: cannot read {path}: {exc}", file=sys.stderr)
         return None
     if b"\0" in data:
         return None
@@ -270,7 +268,7 @@ def play(level: str, player: list[str], sound_dir: Path) -> None:
         sound = make_sound(level, sound_dir)
         subprocess.run([*player, str(sound)], check=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     except (OSError, RuntimeError) as exc:
-        print(f"warning: could not play {level}: {exc}", file=sys.stderr)
+        return
 
 
 def queue_play(level: str, player: list[str], sound_dir: Path) -> bool:
@@ -355,6 +353,7 @@ def main(argv: list[str]) -> int:
     parser.add_argument("--max-files", type=int, default=40, help="Maximum scored files to print.")
     parser.add_argument("--max-sounds", type=int, default=12, help="Maximum reaction sounds to play.")
     parser.add_argument("--threshold", type=int, default=4, help="Minimum score required for an audible reaction.")
+    parser.add_argument("--verbose", action="store_true", help="Print scan details and playback status.")
     parser.add_argument("--exclude", action="append", default=[], help="Glob pattern to exclude. Can be repeated.")
     parser.add_argument("--play-levels", nargs="+", help=argparse.SUPPRESS)
     parser.add_argument("--sound-dir", help=argparse.SUPPRESS)
@@ -371,20 +370,24 @@ def main(argv: list[str]) -> int:
     scores = [score for path in files if (score := score_file(path)) is not None and score.score >= args.threshold]
     scores.sort(key=lambda item: (item.score, item.line_count), reverse=True)
 
-    print(f"Endless Toil scanned {len(files)} files; {len(scores)} triggered reactions.")
-    for score in scores[: args.max_files]:
-        print(f"{score.level.upper():7} {score.score:>3}  {score.path}  {format_findings(score)}")
+    if args.verbose or args.dry_run:
+        print(f"Endless Toil scanned {len(files)} files; {len(scores)} triggered reactions.")
+        for score in scores[: args.max_files]:
+            print(f"{score.level.upper():7} {score.score:>3}  {score.path}  {format_findings(score)}")
 
     if not scores:
-        print("Quiet. Suspiciously quiet.")
+        if args.verbose or args.dry_run:
+            print("Quiet. Suspiciously quiet.")
         return 0
 
     if args.dry_run:
-        print("Dry run: audio skipped.")
+        if args.verbose:
+            print("Dry run: audio skipped.")
         return 0
 
     if audio_player() is None:
-        print("No local audio player found; report printed without sound.")
+        if args.verbose:
+            print("No local audio player found; report printed without sound.")
         return 0
 
     levels = [score.level for score in scores[: args.max_sounds]]
@@ -393,11 +396,14 @@ def main(argv: list[str]) -> int:
     else:
         queued = queue_background_playback(levels, sound_dir)
         if queued:
-            print("Audio queued in background.")
+            if args.verbose:
+                print("Audio queued in background.")
         elif queue_background_worker(levels, sound_dir):
-            print("Audio queued in background worker.")
+            if args.verbose:
+                print("Audio queued in background worker.")
         else:
-            print("Could not queue background audio; playing in foreground.")
+            if args.verbose:
+                print("Could not queue background audio; playing in foreground.")
             play_levels(levels, sound_dir)
     return 0
 
