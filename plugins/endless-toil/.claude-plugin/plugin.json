@@ -1,0 +1,11 @@
+{
+  "name": "endless-toil",
+  "description": "Play escalating human groans while code is read.",
+  "version": "0.1.0",
+  "author": {
+    "name": "vos"
+  },
+  "license": "MIT",
+  "keywords": ["skills", "code-review", "audio", "groan"],
+  "skills": "./skills/"
+}
